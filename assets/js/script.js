@@ -13,41 +13,41 @@ var todayweatherEl = document.getElementById("today-weather");
 var searchHistory = JSON.parse(localStorage.getItem("search")) || [];
 
 var displayName;
-var dateDisplay;
 var searchTerms = [];
 
 // Api Key
 var APIKey = "86ef247d424c25935fd6c766a8b744f8";
 
-var getCoordinates = function(searchTerm) {
-    /* use the mapquest API to geocode the location based on the search terms */
+var getCoordinates = function(cityName) {
+    var apiUrll = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial" + "&appid=" + APIKey;
 
-    searchTerm = searchTerm.split(" ").join("+");
-    var geocodingApiUrl = "https://www.mapquestapi.com/geocoding/v1/address?key=ZJUiXdZZzhsEe05eUGvmmAsIoTPvQOHn&location=" + searchTerm;
-    fetch(geocodingApiUrl).then(function(res) {
-        if (res.ok) {
-            res.json().then(function(data) {
+    fetch(apiUrll).then(function(response){
+        if (response.ok) {
+            response.json().then(function(data){
+                
+                
+                todayweatherEl.classList.remove("d-none");
 
-                // find one location to use to generate the weather
-                var locations = data.results[0].locations;
-                if (locations.length == 1) {
-                    saveLocation(locations[0]);
-                    getWeather(locations[0].latLng);
-                } else {
-                    confirmLocation(locations);  // prompt the user to confirm the location
-                }
-            })
-        } else {
-            console.log("Couldn't get the coordinates from the mapquest API: ", res.text);
+                var lat = data.coord.lat;
+                var lon = data.coord.lon;
+                displayName = data.name;
+
+                // call getForecast function
+                getForecast(lat,lon);
+            });
+        }
+        else {
+            alert('Error: City Not Found');
         }
     });
-}
+
+};
+
 
 // get forecast function
-var getForecast = function(cityName) {
+var getForecast = function(lat,lon) {
     // weather request from api
-    var apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&units=imperial" + "&appid=" + APIKey;
-    var betterUrl = 
+    var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=minutely,hourly,alerts&units=imperial&appid=" + APIKey;
 
     fetch(apiUrl).then(function(response){
         if (response.ok) {
@@ -70,26 +70,22 @@ var getForecast = function(cityName) {
 var displayForecast = function(weatherData) {
 
     // set city name and date
-    var city = weatherData.name;
-    var unixDate = weatherData.dt;
+    var city = displayName;
+    var unixDate = weatherData.current.dt;
     var formattedDate = moment.unix(unixDate).format("dddd, MMMM Do");
 
     // insert city name and date to page
     nameEl.textContent = city + " (" + formattedDate + ") :";
 
     // display current forecast icon
-    var weatherPic = weatherData.weather[0].icon;
+    var weatherPic = weatherData.current.weather[0].icon;
     currentPicEl.setAttribute("src", "https://openweathermap.org/img/wn/" + weatherPic + "@2x.png");
-    currentPicEl.setAttribute("alt", weatherData.weather[0].description);
+    currentPicEl.setAttribute("alt", weatherData.current.weather[0].description);
 
     // display temp, humidity, wind speed, uv index
-    currentTempEl.innerHTML = "Temperature: " + weatherData.main.temp + "<span>&#176</span>" + "F";
-    currentHumidityEl.innerHTML = "Humidity: " + weatherData.main.humidity + " %";
-    currentWindEl.innerHTML = "Wind: " + weatherData.wind.speed + "MPH";
-    currentUVEl.innerHTML = "UV Index: " + weatherData.uvi;
+    currentTempEl.innerHTML = "Temperature: " + weatherData.current.temp + "<span>&#176</span>" + "F";
+    currentHumidityEl.innerHTML = "Humidity: " + weatherData.current.humidity + " %";
+    currentWindEl.innerHTML = "Wind: " + weatherData.current.wind_speed + "MPH";
+    currentUVEl.innerHTML = "UV Index: " + weatherData.current.uvi;
 
-}
-
-var getDate = function(date) {
-
-}
+};
