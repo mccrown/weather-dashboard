@@ -1,0 +1,13 @@
+:root {
+    --primary: #42aa8b;
+    --secondary: #f0ffff;
+}
+
+h1 {
+    color: var(--secondary)
+}
+
+header, .btn {
+    background-color: var(--primary);
+    border-color: black;
+}
