@@ -14,7 +14,7 @@
     <header class="hero navbar navbar-dark bg-secondary justify-content-center">
         <h1 class="app-title">Weather Dashboard</h1>
     </header>
-
+    <!--search form-->
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-3 bg-light">
@@ -27,9 +27,11 @@
                         </button>
                     </div>
                 </div>
+                <!--Clear history button-->
                 <button class="btn btn-primary mb-3" type="button" id="clear-history">Clear history</button>
                 <form id="history"></form>
             </div>
+            <!--Display current weather for searched city-->
             <div class="col-lg-9">
                 <div class="row mr-0">
                     <div class="col-lg-11 card m-3 d-none" id="today-weather">
@@ -43,11 +45,13 @@
                         </div>
                     </div>
                 </div>
+                <!--Display 5 day forecast-->
                 <div class="row d-none" id="fiveday-header">
                     <div class="col-12">
                         <h3>5-Day Forecast</h3>
                     </div>
                 </div>
+                <!--5 day forecast-->
                 <div class="row">
                     <div class="col-md-2 forecast bg-primary text-white m-2 rounded"></div>
                     <div class="col-md-2 forecast bg-primary text-white m-2 rounded"></div>
