@@ -12,6 +12,10 @@ var fivedayEl = document.getElementById("fiveday-header");
 var todayweatherEl = document.getElementById("today-weather");
 var searchHistory = JSON.parse(localStorage.getItem("search")) || [];
 
+var displayName;
+var dateDisplay;
+var searchTerms = [];
+
 // Api Key
 var APIKey = "86ef247d424c25935fd6c766a8b744f8";
 
@@ -23,7 +27,12 @@ var getForecast = function(cityName) {
     fetch(apiUrl).then(function(response){
         if (response.ok) {
             response.json().then(function(data){
-                displayForecast(data.items, cityName)
+                console.log(data);
+                
+                todayweatherEl.classList.remove("d-none");
+
+                // display the current weather and forecast
+                displayForecast(data);
             });
         }
         else {
@@ -31,3 +40,22 @@ var getForecast = function(cityName) {
         }
     });
 };
+
+var displayForecast = function(weatherData) {
+
+    // set city name and date
+    var city = weatherData.name;
+    var unixDate = weatherData.dt;
+    var formattedDate = moment.unix(unixDate).format("dddd, MMMM Do");
+
+    // insert city name and date to page
+    nameEl.textContent = city + " (" + formattedDate + ") :";
+
+    // display current forecast
+    var 
+
+}
+
+var getDate = function(date) {
+
+}
