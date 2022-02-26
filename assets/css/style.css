@@ -11,3 +11,18 @@ header, .btn {
     background-color: var(--primary);
     border-color: black;
 }
+
+.favorable {
+    background-color: var(--primary);
+    color: var(--secondary)
+}
+
+.moderate {
+    background-color: orange;
+    color: var(--secondary);
+}
+
+.severe {
+    background-color: red;
+    color: var(--secondary);
+}

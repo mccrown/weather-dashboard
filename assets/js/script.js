@@ -86,6 +86,31 @@ var displayForecast = function(weatherData) {
     currentTempEl.innerHTML = "Temperature: " + weatherData.current.temp + "<span>&#176</span>" + "F";
     currentHumidityEl.innerHTML = "Humidity: " + weatherData.current.humidity + " %";
     currentWindEl.innerHTML = "Wind: " + weatherData.current.wind_speed + "MPH";
-    currentUVEl.innerHTML = "UV Index: " + weatherData.current.uvi;
+    if (weatherData.current.uvi <= 2) {
+        currentUVEl.innerHTML = "UV Index: " + "<span class='favorable'>" + weatherData.current.uvi + "</span>";
+    }
+    else if (weatherData.current.uvi > 2 && weatherData.current.uvi <= 7) {
+        currentUVEl.addClass("moderate");
+        currentUVEl.innerHTML = "UV Index: " + "<span class='moderate'>" + weatherData.current.uvi + "</span>";
+    }
+    else {
+        currentUVEl.addClass("severe");
+        currentUVEl.innerHTML = "UV Index: " + "<span class='severe'>" + weatherData.current.uvi + "</span>";
+    }
+    
 
 };
+
+// search button function to pass to get coordinates
+var searchButton = function(event) {
+    event.preventDefault();
+
+    var searchCity = cityEl.value;
+    if (searchCity) {
+        getCoordinates(searchCity);
+        cityEl.value = "";
+    }
+}
+
+// event handlers
+searchEl.addEventListener("click", searchButton);
