@@ -11,6 +11,7 @@ var historyEl = document.getElementById("history");
 var fivedayEl = document.getElementById("fiveday-header");
 var todayweatherEl = document.getElementById("today-weather");
 var searchHistory = JSON.parse(localStorage.getItem("search")) || [];
+var forecastElement = document.querySelector("#forecast");
 
 
 var displayName;
@@ -53,12 +54,14 @@ var getForecast = function(lat,lon) {
     fetch(apiUrl).then(function(response){
         if (response.ok) {
             response.json().then(function(data){
-                console.log(data);
+                
                 
                 todayweatherEl.classList.remove("d-none");
 
                 // display the current weather and forecast
                 displayForecast(data);
+
+                
             });
         }
         else {
@@ -100,20 +103,54 @@ var displayForecast = function(weatherData) {
         currentUVEl.addClass("severe");
         currentUVEl.innerHTML = "UV Index: " + "<span class='severe'>" + weatherData.current.uvi + "</span>";
     }
-    
+
+    // display 5 day
+    fiveDayForecast(weatherData.daily);
 
 };
 
+var fiveDayForecast = function(forecastData) {
+    console.log(forecastData);
+    // iterate through the 5 days
+    for (var i = 1; i < 6; i++) {
+
+        // display the date
+        var dateElement = forecastElement.querySelector("#forecast-date-" + i);
+        var unixDate = forecastData[i].dt;
+        dateElement.textContent = moment.unix(unixDate).format("MMMM Do");
+
+        // display the icon representation
+        var weatherPic = forecastData[i].weather[0].icon;
+        var iconElement = forecastElement.querySelector("#forecast-icon-" + i);
+        iconElement.setAttribute("src", "https://openweathermap.org/img/wn/" + weatherPic + "@2x.png");
+        iconElement.setAttribute("alt", forecastData[i].weather[0].description);
+
+        // display max temperature
+        var maxTempElement = forecastElement.querySelector("#forecast-temp-" + i);
+        var maxTemp = Math.floor(forecastData[i].temp.max);  // fahrenheit
+        maxTempElement.textContent = "High Temp: " + maxTemp + "°F";
+
+        // display wind
+        var windElement = forecastElement.querySelector("#forecast-wind-" + i);
+        var windSpeed = forecastData[i].wind_speed; 
+        windElement.textContent = "Wind: " + windSpeed + "MPH";
+
+        // display humidity
+        var humidityElement = forecastElement.querySelector("#forecast-humidity-" + i);
+        var humidity = forecastData[i].humidity;  // percentage
+        humidityElement.textContent = "Humidity: " + humidity + "%";
+    }
+
+}
+
 
 var createHistoryEl = function(searchData) {
-    searchHistory.push(searchData);
-    console.log(searchHistory);
-    for (var i = 0; i < searchHistory.length; i++){
+    for (var i = 0; i < searchData.length; i++){
     var historyItem = document.createElement("input");
     historyItem.setAttribute("type", "text");
     historyItem.setAttribute("readonly", true);
     historyItem.setAttribute("class", "form-control d-block bg-white");
-    historyItem.setAttribute("value", searchHistory[i]);
+    historyItem.setAttribute("value", searchData[i]);
     historyItem.addEventListener("click", function (){
         getCoordinates(historyItem.value);
     })
