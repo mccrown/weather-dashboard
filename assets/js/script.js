@@ -60,8 +60,7 @@ var getForecast = function(lat,lon) {
 
                 // display the current weather and forecast
                 displayForecast(data);
-
-                
+                fiveDayForecast(data);
             });
         }
         else {
@@ -96,52 +95,48 @@ var displayForecast = function(weatherData) {
         currentUVEl.innerHTML = "UV Index: " + "<span class='favorable'>" + weatherData.current.uvi + "</span>";
     }
     else if (weatherData.current.uvi > 2 && weatherData.current.uvi <= 7) {
-        currentUVEl.addClass("moderate");
         currentUVEl.innerHTML = "UV Index: " + "<span class='moderate'>" + weatherData.current.uvi + "</span>";
     }
     else {
-        currentUVEl.addClass("severe");
         currentUVEl.innerHTML = "UV Index: " + "<span class='severe'>" + weatherData.current.uvi + "</span>";
     }
-
-    // display 5 day
-    fiveDayForecast(weatherData.daily);
-
 };
 
 var fiveDayForecast = function(forecastData) {
     console.log(forecastData);
+    fivedayEl.classList.remove("d-none");
+    forecastElement.classList.remove("d-none");
     // iterate through the 5 days
     for (var i = 1; i < 6; i++) {
 
         // display the date
         var dateElement = forecastElement.querySelector("#forecast-date-" + i);
-        var unixDate = forecastData[i].dt;
+        var unixDate = forecastData.daily[i].dt;
         dateElement.textContent = moment.unix(unixDate).format("MMMM Do");
 
         // display the icon representation
-        var weatherPic = forecastData[i].weather[0].icon;
+        var weatherPic = forecastData.daily[i].weather[0].icon;
         var iconElement = forecastElement.querySelector("#forecast-icon-" + i);
         iconElement.setAttribute("src", "https://openweathermap.org/img/wn/" + weatherPic + "@2x.png");
-        iconElement.setAttribute("alt", forecastData[i].weather[0].description);
+        iconElement.setAttribute("alt", forecastData.daily[i].weather[0].description);
 
         // display max temperature
         var maxTempElement = forecastElement.querySelector("#forecast-temp-" + i);
-        var maxTemp = Math.floor(forecastData[i].temp.max);  // fahrenheit
+        var maxTemp = Math.floor(forecastData.daily[i].temp.max);  // fahrenheit
         maxTempElement.textContent = "High Temp: " + maxTemp + "°F";
 
         // display wind
         var windElement = forecastElement.querySelector("#forecast-wind-" + i);
-        var windSpeed = forecastData[i].wind_speed; 
-        windElement.textContent = "Wind: " + windSpeed + "MPH";
+        var windSpeed = forecastData.daily[i].wind_speed; 
+        windElement.textContent = "Wind: " + windSpeed + " MPH";
 
         // display humidity
         var humidityElement = forecastElement.querySelector("#forecast-humidity-" + i);
-        var humidity = forecastData[i].humidity;  // percentage
+        var humidity = forecastData.daily[i].humidity;  // percentage
         humidityElement.textContent = "Humidity: " + humidity + "%";
     }
 
-}
+};
 
 
 var createHistoryEl = function(searchData) {
@@ -150,7 +145,7 @@ var createHistoryEl = function(searchData) {
     historyItem.setAttribute("type", "text");
     historyItem.setAttribute("readonly", true);
     historyItem.setAttribute("class", "form-control d-block bg-white");
-    historyItem.setAttribute("value", searchData[i]);
+    historyItem.setAttribute("value", searchData[i].toUpperCase());
     historyItem.addEventListener("click", function (){
         getCoordinates(historyItem.value);
     })
@@ -159,9 +154,8 @@ var createHistoryEl = function(searchData) {
 }
 
 var displaySearchHistory = function(searchData) {
-    var historyItem = document.createElement("input");
     for (var i = 0; i < searchData.length; i++){
-        
+        var historyItem = document.createElement("input");
         historyItem.setAttribute("type", "text");
         historyItem.setAttribute("readonly", true);
         historyItem.setAttribute("class", "form-control d-block bg-white");

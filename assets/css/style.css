@@ -8,7 +8,8 @@ body {
 }
 
 h1 {
-    color: var(--secondary)
+    color: var(--secondary);
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 header, .btn {
@@ -18,7 +19,7 @@ header, .btn {
 
 .favorable {
     background-color: var(--primary);
-    color: var(--secondary)
+    color: var(--secondary);
 }
 
 .moderate {
@@ -34,4 +35,19 @@ header, .btn {
 .severe, .moderate, .favorable {
     padding: 5px;
     border-radius: 5px;
+}
+
+
+.forecast {
+    border-color: 1px solid var(--secondary);
+    background-color: var(--primary);
+}
+
+#history {
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.fiveday-header h3 {
+    font-weight: bolder;
 }
