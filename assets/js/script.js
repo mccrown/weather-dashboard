@@ -12,9 +12,9 @@ var fivedayEl = document.getElementById("fiveday-header");
 var todayweatherEl = document.getElementById("today-weather");
 var searchHistory = JSON.parse(localStorage.getItem("search")) || [];
 
+
 var displayName;
 var searchTerms = [];
-
 
 // Api Key
 var APIKey = "86ef247d424c25935fd6c766a8b744f8";
@@ -35,7 +35,6 @@ var getCoordinates = function(cityName) {
 
                 // call getForecast function
                 getForecast(lat,lon);
-                saveSearch(displayName);
             });
         }
         else {
@@ -105,37 +104,49 @@ var displayForecast = function(weatherData) {
 
 };
 
-// search button function to pass to get coordinates
-var searchButton = function(event) {
-    event.preventDefault();
 
-    var searchCity = cityEl.value;
-    if (searchCity) {
-        getCoordinates(searchCity);
-        cityEl.value = "";
+var createHistoryEl = function(searchData) {
+    searchHistory.push(searchData);
+    console.log(searchHistory);
+    for (var i = 0; i < searchHistory.length; i++){
+    var historyItem = document.createElement("input");
+    historyItem.setAttribute("type", "text");
+    historyItem.setAttribute("readonly", true);
+    historyItem.setAttribute("class", "form-control d-block bg-white");
+    historyItem.setAttribute("value", searchHistory[i]);
+    historyItem.addEventListener("click", function (){
+        getCoordinates(historyItem.value);
+    })
     }
-};
-
-// save searches to localstorage
-var saveSearch = function(searchHistory) {
-    var savedName = searchHistory;
-    // save to array
-    searchTerms.push(savedName);
-
-    // save arry to object
-    localHistory = {
-        searchTerms: searchTerms
-    }
-
-    // save to localStorage
-    localStorage.setItem("search", JSON.stringify(localHistory));
-
-    // update the search history
-    createHistoryEl(savedName);
-
+    historyEl.appendChild(historyItem);
 }
 
-
+var displaySearchHistory = function(searchData) {
+    var historyItem = document.createElement("input");
+    for (var i = 0; i < searchData.length; i++){
+        
+        historyItem.setAttribute("type", "text");
+        historyItem.setAttribute("readonly", true);
+        historyItem.setAttribute("class", "form-control d-block bg-white");
+        historyItem.setAttribute("value", searchData[i]);
+        historyItem.addEventListener("click", function (){
+            getCoordinates(historyItem.value);
+        })
+        }
+        historyEl.appendChild(historyItem);
+}
 
 // event handlers
-searchEl.addEventListener("click", searchButton);
+//searchEl.addEventListener("click", searchButton);
+searchEl.addEventListener("click", function () {
+    var searchTerm = cityEl.value;
+    getCoordinates(searchTerm);
+    searchHistory.push(searchTerm);
+    searchTerms.push(searchTerm);
+    localStorage.setItem("search", JSON.stringify(searchHistory));
+    createHistoryEl(searchTerms);
+    cityEl.value = "";
+
+});
+//displaySearchHistory(searchHistory);
+displaySearchHistory(searchHistory);
