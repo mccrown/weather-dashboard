@@ -3,6 +3,10 @@
     --secondary: #f0ffff;
 }
 
+body {
+    font-family: "IBM Plex Sans", sans-serif;
+}
+
 h1 {
     color: var(--secondary)
 }
@@ -25,4 +29,9 @@ header, .btn {
 .severe {
     background-color: red;
     color: var(--secondary);
+}
+
+.severe, .moderate, .favorable {
+    padding: 5px;
+    border-radius: 5px;
 }

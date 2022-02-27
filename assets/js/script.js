@@ -15,6 +15,7 @@ var searchHistory = JSON.parse(localStorage.getItem("search")) || [];
 var displayName;
 var searchTerms = [];
 
+
 // Api Key
 var APIKey = "86ef247d424c25935fd6c766a8b744f8";
 
@@ -34,6 +35,7 @@ var getCoordinates = function(cityName) {
 
                 // call getForecast function
                 getForecast(lat,lon);
+                saveSearch(displayName);
             });
         }
         else {
@@ -85,7 +87,9 @@ var displayForecast = function(weatherData) {
     // display temp, humidity, wind speed, uv index
     currentTempEl.innerHTML = "Temperature: " + weatherData.current.temp + "<span>&#176</span>" + "F";
     currentHumidityEl.innerHTML = "Humidity: " + weatherData.current.humidity + " %";
-    currentWindEl.innerHTML = "Wind: " + weatherData.current.wind_speed + "MPH";
+    currentWindEl.innerHTML = "Wind: " + weatherData.current.wind_speed + " MPH";
+
+    //check uvi value and assign class based on value
     if (weatherData.current.uvi <= 2) {
         currentUVEl.innerHTML = "UV Index: " + "<span class='favorable'>" + weatherData.current.uvi + "</span>";
     }
@@ -110,7 +114,28 @@ var searchButton = function(event) {
         getCoordinates(searchCity);
         cityEl.value = "";
     }
+};
+
+// save searches to localstorage
+var saveSearch = function(searchHistory) {
+    var savedName = searchHistory;
+    // save to array
+    searchTerms.push(savedName);
+
+    // save arry to object
+    localHistory = {
+        searchTerms: searchTerms
+    }
+
+    // save to localStorage
+    localStorage.setItem("search", JSON.stringify(localHistory));
+
+    // update the search history
+    createHistoryEl(savedName);
+
 }
+
+
 
 // event handlers
 searchEl.addEventListener("click", searchButton);
