@@ -69,6 +69,13 @@ var getForecast = function(lat,lon) {
     });
 };
 
+var loadSearchHistory = function() {
+    var searchHis = [];
+    searchHis = searchHistory;
+    console.log(searchHis);
+    createHistoryEl(searchHis);
+};
+
 
 var displayForecast = function(weatherData) {
 
@@ -141,30 +148,18 @@ var fiveDayForecast = function(forecastData) {
 
 var createHistoryEl = function(searchData) {
     for (var i = 0; i < searchData.length; i++){
+    const city = searchData[i];
     var historyItem = document.createElement("input");
     historyItem.setAttribute("type", "text");
     historyItem.setAttribute("readonly", true);
     historyItem.setAttribute("class", "form-control d-block bg-white");
-    historyItem.setAttribute("value", searchData[i].toUpperCase());
-    historyItem.addEventListener("click", function (){
-        getCoordinates(historyItem.value);
+    historyItem.setAttribute("value", city.toUpperCase());
+    //historyEl.append(historyItem);
+    historyItem.addEventListener("click", function (event){
+        getCoordinates(event.target.value);
     })
+    historyEl.append(historyItem);
     }
-    historyEl.appendChild(historyItem);
-}
-
-var displaySearchHistory = function(searchData) {
-    for (var i = 0; i < searchData.length; i++){
-        var historyItem = document.createElement("input");
-        historyItem.setAttribute("type", "text");
-        historyItem.setAttribute("readonly", true);
-        historyItem.setAttribute("class", "form-control d-block bg-white");
-        historyItem.setAttribute("value", searchData[i]);
-        historyItem.addEventListener("click", function (){
-            getCoordinates(historyItem.value);
-        })
-        }
-        historyEl.appendChild(historyItem);
 }
 
 // event handlers
@@ -179,5 +174,5 @@ searchEl.addEventListener("click", function () {
     cityEl.value = "";
 
 });
-//displaySearchHistory(searchHistory);
-displaySearchHistory(searchHistory);
+
+loadSearchHistory();

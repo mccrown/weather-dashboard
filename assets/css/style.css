@@ -37,6 +37,10 @@ header, .btn {
     border-radius: 5px;
 }
 
+#forecast {
+    margin: auto;
+}
+
 
 .forecast {
     border-color: 1px solid var(--secondary);
